@@ -1,0 +1,95 @@
+{
+    "timestamp": "2025-11-11T16:44:21.972843",
+    "data_backup": "20251111_164420",
+    "cpu": {
+        "uso_percent": 21.6,
+        "nucleos": 8,
+        "frequencia_mhz": 1803.0
+    },
+    "memoria": {
+        "total_gb": 7.84,
+        "usado_gb": 6.99,
+        "disponivel_gb": 0.85,
+        "percent_usado": 89.2
+    },
+    "disco": {
+        "total_gb": 237.29,
+        "usado_gb": 208.45,
+        "livre_gb": 28.83,
+        "percent_usado": 87.8
+    },
+    "rede": {
+        "ip_local": "192.168.1.213",
+        "bytes_enviados": 64291973,
+        "bytes_recebidos": 1080236223,
+        "pacotes_enviados": 323844,
+        "pacotes_recebidos": 478374
+    },
+    "sistema": {
+        "boot_time": "2025-11-11T11:24:49.079243",
+        "uptime_horas": 5.33,
+        "nome_so": "nt"
+    },
+    "processos_top10": [
+        {
+            "pid": 0,
+            "nome": "System Idle Process",
+            "cpu_percent": 0.0,
+            "memory_percent": 9.736520031429486e-05
+        },
+        {
+            "pid": 4,
+            "nome": "System",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.012803523841329776
+        },
+        {
+            "pid": 172,
+            "nome": "Registry",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.23591588036153643
+        },
+        {
+            "pid": 644,
+            "nome": "svchost.exe",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.007156342223100673
+        },
+        {
+            "pid": 676,
+            "nome": "smss.exe",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.0004381434014143269
+        },
+        {
+            "pid": 1052,
+            "nome": "svchost.exe",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.025168904281245224
+        },
+        {
+            "pid": 1080,
+            "nome": "svchost.exe",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.08134862486259337
+        },
+        {
+            "pid": 1088,
+            "nome": "csrss.exe",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.012657476040858333
+        },
+        {
+            "pid": 1092,
+            "nome": "svchost.exe",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.03320153330717455
+        },
+        {
+            "pid": 1184,
+            "nome": "wininit.exe",
+            "cpu_percent": 0.0,
+            "memory_percent": 0.005452451217600513
+        }
+    ]
+}

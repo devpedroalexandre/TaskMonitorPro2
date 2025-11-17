@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>TaskMonitor Pro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background-color: #121212;
+      color: #f1f1f1;
+    }
+    .dark-mode .container {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+    }
+    .dark-mode .list-group-item {
+      background-color: #1e1e1e;
+      color: #f1f1f1;
+      border-color: #333;
+    }
+    .dark-mode .btn {
+      color: #f1f1f1 !important;
+      border-color: #f1f1f1 !important;
+    }
+    .dark-mode .card {
+      background-color: #1e1e1e;
+      border-color: #333;
+    }
+    .dark-mode .card-header {
+      background-color: #0d6efd !important;
+      border-color: #333;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <button class="btn btn-outline-secondary theme-toggle" onclick="alternarTema()">🌙 Tema</button>
+    <h1 class="text-center mb-4">🖥️ TaskMonitor Pro</h1>
+
+    <div class="row text-center">
+      <div class="col"><h4>CPU</h4><p class="fs-4">{{ cpu }}%</p></div>
+      <div class="col"><h4>Memória</h4><p class="fs-4">{{ memoria }}%</p></div>
+      <div class="col"><h4>Disco</h4><p class="fs-4">{{ disco }}%</p></div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-primary me-2" onclick="executarBackup()">Criar Backup</button>
+      <button class="btn btn-secondary me-2" onclick="mostrarPainel('status')">Status</button>
+      <button class="btn btn-outline-dark me-2" onclick="mostrarPainel('logs')">Logs</button>
+      <button class="btn btn-outline-danger me-2" onclick="mostrarPainel('processos')">Processos</button>
+      <button class="btn btn-outline-info me-2" onclick="mostrarPainel('rede')">Rede</button>
+      <button class="btn btn-outline-warning me-2" onclick="mostrarPainel('hardware')">Hardware</button>
+      <button class="btn btn-outline-success" onclick="mostrarPainel('uptime')">Uptime</button>
+    </div>
+
+    <div id="painel-backup" class="mt-4 text-center" style="display:none;">
+      <p id="mensagem-backup" class="fw-bold"></p>
+    </div>
+
+    <div id="painel-status" class="mt-4" style="display:none;"><h4>Status do Sistema</h4><ul id="status-list" class="list-group"></ul></div>
+    <div id="painel-logs" class="mt-4" style="display:none;"><h4>Logs</h4><ul id="logs-list" class="list-group"></ul></div>
+    <div id="painel-processos" class="mt-4" style="display:none;"><h4>Processos</h4><ul id="processos-list" class="list-group"></ul></div>
+    
+    <!-- Painel de Rede -->
+    <div id="painel-rede" class="mt-4" style="display:none;">
+      <h4>Rede</h4>
+      <ul id="rede-list" class="list-group"></ul>
+      
+      <!-- GRÁFICO DE REDE EM TEMPO REAL -->
+      <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+          <h5>📊 Oscilação de Rede em Tempo Real</h5>
+        </div>
+        <div class="card-body">
+          <canvas id="redeChart" width="400" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+    
+    <div id="painel-hardware" class="mt-4" style="display:none;"><h4>Hardware</h4><ul id="hardware-list" class="list-group"></ul></div>
+    <div id="painel-uptime" class="mt-4" style="display:none;"><h4>Uptime</h4><ul id="uptime-list" class="list-group"></ul></div>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    function alternarTema() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function esconderTodos() {
+      document.querySelectorAll('[id^="painel-"]').forEach(p => p.style.display = 'none');
+      if (window.intervaloGraficoRede) {
+        clearInterval(window.intervaloGraficoRede);
+        window.intervaloGraficoRede = null;
+      }
+    }
+
+    function mostrarPainel(tipo) {
+      esconderTodos();
+
+      if (tipo === 'status') {
+        fetch('/status').then(res => res.json()).then(data => {
+          document.getElementById('status-list').innerHTML = `
+            <li class="list-group-item">CPU: ${data.cpu}%</li>
+            <li class="list-group-item">Memória: ${data.memoria}%</li>
+            <li class="list-group-item">Disco: ${data.disco}%</li>
+            <li class="list-group-item">Servidor: ${data.status_servidor}</li>
+          `;
+          document.getElementById('painel-status').style.display = 'block';
+        });
+      }
+
+      if (tipo === 'logs') {
+        fetch('/logs').then(res => res.text()).then(texto => {
+          const linhas = texto.split('\n').filter(l => l.trim() !== '');
+          document.getElementById('logs-list').innerHTML = linhas.map(l => `<li class="list-group-item">${l}</li>`).join('');
+          document.getElementById('painel-logs').style.display = 'block';
+        });
+      }
+
+      if (tipo === 'processos') {
+        fetch('/processos').then(res => res.json()).then(lista => {
+          document.getElementById('processos-list').innerHTML = lista.map(proc => `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span><strong>${proc.name}</strong> (PID: ${proc.pid}) — CPU: ${proc.cpu_percent}% | Memória: ${proc.memory_percent.toFixed(1)}%</span>
+              <button class="btn btn-sm btn-danger" onclick="encerrarProcesso(${proc.pid})">Encerrar</button>
+            </li>
+          `).join('');
+          document.getElementById('painel-processos').style.display = 'block';
+        });
+      }
+
+      // REDE COM OLHOS INDEPENDENTES - CORRIGIDO
+      if (tipo === 'rede') {
+        fetch('/rede').then(res => res.json()).then(dados => {
+          // Estados independentes para cada IP
+          let mostrarLocal = false;
+          let mostrarPublico = false;
+
+          const atualizarRede = () => {
+            document.getElementById('rede-list').innerHTML = `
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>IP Local: <strong>${mostrarLocal ? dados.ip_local : '••••••••'}</strong></span>
+                <button class="btn btn-sm btn-outline-secondary" onclick="alternarIPLocal()">
+                  ${mostrarLocal ? '🔒' : '👁️'}
+                </button>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>IP Público: <strong>${mostrarPublico ? dados.ip_publico : '••••••••'}</strong></span>
+                <button class="btn btn-sm btn-outline-secondary" onclick="alternarIPPublico()">
+                  ${mostrarPublico ? '🔒' : '👁️'}
+                </button>
+              </li>
+              <li class="list-group-item">Enviado: ${dados.enviado} MB</li>
+              <li class="list-group-item">Recebido: ${dados.recebido} MB</li>
+            `;
+          };
+
+          // Função para alternar APENAS IP Local
+          window.alternarIPLocal = () => {
+            mostrarLocal = !mostrarLocal;
+            atualizarRede();
+          };
+
+          // Função para alternar APENAS IP Público
+          window.alternarIPPublico = () => {
+            mostrarPublico = !mostrarPublico;
+            atualizarRede();
+          };
+
+          // Renderiza pela primeira vez (com IPs ocultos)
+          atualizarRede();
+          document.getElementById('painel-rede').style.display = 'block';
+          
+          // Inicia o gráfico de rede
+          iniciarGraficoRede();
+        });
+      }
+
+      if (tipo === 'hardware') {
+        fetch('/hardware').then(res => res.json()).then(dados => {
+          document.getElementById('hardware-list').innerHTML = `
+            <li class="list-group-item">Sistema: ${dados.sistema}</li>
+            <li class="list-group-item">Versão: ${dados.versao}</li>
+            <li class="list-group-item">Arquitetura: ${dados.arquitetura}</li>
+            <li class="list-group-item">Processador: ${dados.processador}</li>
+            <li class="list-group-item">Núcleos Físicos: ${dados.cpu_cores}</li>
+            <li class="list-group-item">Threads Lógicas: ${dados.cpu_threads}</li>
+            <li class="list-group-item">Memória Total: ${dados.memoria_total} GB</li>
+            <li class="list-group-item">Disco Total: ${dados.disco_total} GB</li>
+          `;
+          document.getElementById('painel-hardware').style.display = 'block';
+        });
+      }
+
+      if (tipo === 'uptime') {
+        fetch('/uptime').then(res => res.json()).then(dados => {
+          document.getElementById('uptime-list').innerHTML = `
+            <li class="list-group-item">Tempo Ativo: ${dados.horas}h ${dados.minutos}min</li>
+            <li class="list-group-item">Iniciado em: ${dados.inicio}</li>
+          `;
+          document.getElementById('painel-uptime').style.display = 'block';
+        });
+      }
+    }
+
+    function executarBackup() {
+      esconderTodos();
+      fetch('/backup')
+        .then(res => res.text())
+        .then(msg => {
+          document.getElementById('mensagem-backup').textContent = msg;
+          document.getElementById('painel-backup').style.display = 'block';
+        });
+    }
+
+    function encerrarProcesso(pid) {
+      fetch('/encerrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pid: pid })
+      })
+      .then(res => res.json())
+      .then(resp => {
+        if (resp.status === "encerrado") {
+          alert(`✅ Processo ${resp.pid} encerrado com sucesso!`);
+        } else {
+          alert(`⚠️ Erro ao encerrar processo: ${resp.mensagem}`);
+        }
+        mostrarPainel('processos');
+      });
+    }
+
+    // ====================================
+    // GRÁFICO DE REDE EM TEMPO REAL
+    // ====================================
+    let redeChart = null;
+    let ultimoEnviado = 0;
+    let ultimoRecebido = 0;
+
+    function iniciarGraficoRede() {
+      if (redeChart) {
+        redeChart.destroy();
+      }
+
+      const redeCtx = document.getElementById('redeChart').getContext('2d');
+      redeChart = new Chart(redeCtx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'Download (MB)',
+              data: [],
+              borderColor: 'rgb(75, 192, 192)',
+              backgroundColor: 'rgba(75, 192, 192, 0.1)',
+              borderWidth: 2,
+              tension: 0.4,
+              fill: true
+            },
+            {
+              label: 'Upload (MB)',
+              data: [],
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.1)',
+              borderWidth: 2,
+              tension: 0.4,
+              fill: true
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'MB/s'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Tempo'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+          animation: {
+            duration: 500
+          }
+        }
+      });
+
+      ultimoEnviado = 0;
+      ultimoRecebido = 0;
+
+      atualizarGraficoRede();
+      window.intervaloGraficoRede = setInterval(atualizarGraficoRede, 2000);
+    }
+
+    function atualizarGraficoRede() {
+      fetch('/rede/historico')
+        .then(response => response.json())
+        .then(data => {
+          if (data.erro) {
+            console.error('Erro:', data.erro);
+            return;
+          }
+
+          const agora = new Date().toLocaleTimeString('pt-BR');
+          const downloadAtual = data.recebido;
+          const uploadAtual = data.enviado;
+
+          if (ultimoRecebido === 0) {
+            ultimoRecebido = downloadAtual;
+            ultimoEnviado = uploadAtual;
+            return;
+          }
+
+          const taxaDownload = Math.max(0, (downloadAtual - ultimoRecebido)).toFixed(2);
+          const taxaUpload = Math.max(0, (uploadAtual - ultimoEnviado)).toFixed(2);
+
+          ultimoRecebido = downloadAtual;
+          ultimoEnviado = uploadAtual;
+
+          redeChart.data.labels.push(agora);
+          redeChart.data.datasets[0].data.push(parseFloat(taxaDownload));
+          redeChart.data.datasets[1].data.push(parseFloat(taxaUpload));
+
+          if (redeChart.data.labels.length > 20) {
+            redeChart.data.labels.shift();
+            redeChart.data.datasets[0].data.shift();
+            redeChart.data.datasets[1].data.shift();
+          }
+
+          redeChart.update('none');
+        })
+        .catch(error => console.error('Erro:', error));
+    }
+  </script>
+</body>
+</html>
