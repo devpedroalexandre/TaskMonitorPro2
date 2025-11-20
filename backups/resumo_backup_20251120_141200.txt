@@ -1,0 +1,84 @@
+============================================================
+BACKUP TASKMONITOR PRO 2 - 20251120_141200
+============================================================
+
+🕐 Data/Hora do Backup: 20/11/2025 14:12:00
+
+============================================================
+RESUMO DO SISTEMA
+============================================================
+
+💻 CPU:
+   - Uso Atual: 35.7%
+   - Núcleos: 4
+   - Frequência: 1803 MHz
+
+🧠 MEMÓRIA:
+   - Total: 7.84 GB
+   - Usado: 6.76 GB (86.3%)
+   - Disponível: 1.08 GB
+
+💾 DISCO:
+   - Total: 237.29 GB
+   - Usado: 203.97 GB (86.0%)
+   - Livre: 33.32 GB
+
+🌐 REDE:
+   - IP Local: 192.168.1.213
+   - Bytes Enviados: 12,699,629
+   - Bytes Recebidos: 70,425,992
+
+⏱️ SISTEMA:
+   - Boot: 20/11/2025 13:38:40
+   - Uptime: 0.56 horas
+
+============================================================
+SENSORES AVANÇADOS
+============================================================
+
+🌡️ TEMPERATURA CPU:
+   - Valor: 42.1°C
+
+⚡ FREQUÊNCIA RAM:
+   - Valor: 3200 MHz
+
+🔋 ENERGIA RAM:
+   - Consumo Total: 1.5 W
+
+🔋 BATERIA:
+   - Status: N/A (Desktop ou sensor não disponível)
+
+============================================================
+TOP 10 PROCESSOS (por uso de CPU)
+============================================================
+
+1. System Idle Process (PID: 0)
+   CPU: 770.0% | RAM: 0.0%
+
+2. dwm.exe (PID: 1848)
+   CPU: 4.8% | RAM: 1.2%
+
+3. msedge.exe (PID: 12812)
+   CPU: 4.5% | RAM: 1.7%
+
+4. python.exe (PID: 5456)
+   CPU: 3.2% | RAM: 0.7%
+
+5. msedge.exe (PID: 5480)
+   CPU: 2.5% | RAM: 2.8%
+
+6. Code.exe (PID: 516)
+   CPU: 2.2% | RAM: 3.2%
+
+7. System (PID: 4)
+   CPU: 1.5% | RAM: 0.0%
+
+8. msedge.exe (PID: 12332)
+   CPU: 1.5% | RAM: 2.6%
+
+9. Code.exe (PID: 13728)
+   CPU: 1.3% | RAM: 1.2%
+
+10. msedge.exe (PID: 3816)
+   CPU: 1.2% | RAM: 3.1%
+
