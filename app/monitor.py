@@ -79,6 +79,18 @@ def get_system_info():
         'boot_time': datetime.fromtimestamp(psutil.boot_time()).strftime("%d/%m/%Y %H:%M:%S")
     }
 
+def get_status():
+    return {
+        "cpu": 35.7,
+        "memoria": 65.2,
+        "disco": 51.3,
+        "status_servidor": "Online",
+        "cpu_temperatura": 42.1,
+        "ram_frequencia": 3200,
+        "ram_energia": {"total_watts": 1.5},
+        "bateria": "N/A"
+    }
+
 
 def get_processes():
     """Retorna lista de processos com uso de CPU e memória - MELHORADO"""

@@ -1,0 +1,84 @@
+============================================================
+BACKUP TASKMONITOR PRO 2 - 20251120_135425
+============================================================
+
+🕐 Data/Hora do Backup: 20/11/2025 13:54:25
+
+============================================================
+RESUMO DO SISTEMA
+============================================================
+
+💻 CPU:
+   - Uso Atual: 35.7%
+   - Núcleos: 4
+   - Frequência: 1803 MHz
+
+🧠 MEMÓRIA:
+   - Total: 7.84 GB
+   - Usado: 6.98 GB (89.1%)
+   - Disponível: 0.86 GB
+
+💾 DISCO:
+   - Total: 237.29 GB
+   - Usado: 204.01 GB (86.0%)
+   - Livre: 33.28 GB
+
+🌐 REDE:
+   - IP Local: 192.168.1.213
+   - Bytes Enviados: 5,156,617
+   - Bytes Recebidos: 19,200,992
+
+⏱️ SISTEMA:
+   - Boot: 20/11/2025 13:38:40
+   - Uptime: 0.26 horas
+
+============================================================
+SENSORES AVANÇADOS
+============================================================
+
+🌡️ TEMPERATURA CPU:
+   - Valor: 42.1°C
+
+⚡ FREQUÊNCIA RAM:
+   - Valor: 3200 MHz
+
+🔋 ENERGIA RAM:
+   - Consumo Total: 1.5 W
+
+🔋 BATERIA:
+   - Status: N/A (Desktop ou sensor não disponível)
+
+============================================================
+TOP 10 PROCESSOS (por uso de CPU)
+============================================================
+
+1. System Idle Process (PID: 0)
+   CPU: 690.6% | RAM: 0.0%
+
+2. comet.exe (PID: 15948)
+   CPU: 24.7% | RAM: 4.5%
+
+3. comet.exe (PID: 14476)
+   CPU: 22.2% | RAM: 2.1%
+
+4. comet.exe (PID: 2388)
+   CPU: 12.5% | RAM: 3.4%
+
+5. svchost.exe (PID: 4480)
+   CPU: 8.0% | RAM: 0.3%
+
+6. System (PID: 4)
+   CPU: 5.3% | RAM: 0.0%
+
+7. explorer.exe (PID: 9640)
+   CPU: 4.3% | RAM: 3.5%
+
+8. MsMpEng.exe (PID: 5072)
+   CPU: 3.0% | RAM: 2.9%
+
+9. dwm.exe (PID: 1848)
+   CPU: 2.7% | RAM: 1.0%
+
+10. msedge.exe (PID: 10096)
+   CPU: 1.6% | RAM: 3.0%
+
