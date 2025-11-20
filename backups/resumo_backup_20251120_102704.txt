@@ -1,0 +1,84 @@
+============================================================
+BACKUP TASKMONITOR PRO 2 - 20251120_102704
+============================================================
+
+🕐 Data/Hora do Backup: 20/11/2025 10:27:04
+
+============================================================
+RESUMO DO SISTEMA
+============================================================
+
+💻 CPU:
+   - Uso Atual: 3.1%
+   - Núcleos: 4
+   - Frequência: 1803 MHz
+
+🧠 MEMÓRIA:
+   - Total: 7.84 GB
+   - Usado: 6.92 GB (88.3%)
+   - Disponível: 0.92 GB
+
+💾 DISCO:
+   - Total: 237.29 GB
+   - Usado: 202.67 GB (85.4%)
+   - Livre: 34.62 GB
+
+🌐 REDE:
+   - IP Local: 192.168.1.213
+   - Bytes Enviados: 1,597,782,032
+   - Bytes Recebidos: 19,657,729,708
+
+⏱️ SISTEMA:
+   - Boot: 12/11/2025 18:41:35
+   - Uptime: 183.76 horas
+
+============================================================
+SENSORES AVANÇADOS
+============================================================
+
+🌡️ TEMPERATURA CPU:
+   - Valor: 27.9°C
+
+⚡ FREQUÊNCIA RAM:
+   - Valor: 2667 MHz
+
+🔋 ENERGIA RAM:
+   - Consumo Total: 2.94 W
+
+🔋 BATERIA:
+   - Status: N/A (Desktop ou sensor não disponível)
+
+============================================================
+TOP 10 PROCESSOS (por uso de CPU)
+============================================================
+
+1. System Idle Process (PID: 0)
+   CPU: 732.3% | RAM: 0.0%
+
+2. msedge.exe (PID: 7420)
+   CPU: 11.5% | RAM: 1.8%
+
+3. dwm.exe (PID: 9600)
+   CPU: 11.5% | RAM: 1.1%
+
+4. System (PID: 4)
+   CPU: 10.4% | RAM: 0.0%
+
+5. msedge.exe (PID: 6156)
+   CPU: 6.2% | RAM: 1.4%
+
+6. python.exe (PID: 2956)
+   CPU: 3.9% | RAM: 0.6%
+
+7. brave.exe (PID: 15820)
+   CPU: 3.4% | RAM: 1.2%
+
+8. msedge.exe (PID: 15928)
+   CPU: 2.9% | RAM: 1.7%
+
+9. msedge.exe (PID: 13092)
+   CPU: 1.6% | RAM: 2.2%
+
+10. core.exe (PID: 4848)
+   CPU: 1.5% | RAM: 1.7%
+

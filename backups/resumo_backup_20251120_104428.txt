@@ -1,0 +1,84 @@
+============================================================
+BACKUP TASKMONITOR PRO 2 - 20251120_104428
+============================================================
+
+🕐 Data/Hora do Backup: 20/11/2025 10:44:28
+
+============================================================
+RESUMO DO SISTEMA
+============================================================
+
+💻 CPU:
+   - Uso Atual: 6.8%
+   - Núcleos: 4
+   - Frequência: 1803 MHz
+
+🧠 MEMÓRIA:
+   - Total: 7.84 GB
+   - Usado: 7.06 GB (90.0%)
+   - Disponível: 0.78 GB
+
+💾 DISCO:
+   - Total: 237.29 GB
+   - Usado: 202.66 GB (85.4%)
+   - Livre: 34.62 GB
+
+🌐 REDE:
+   - IP Local: 192.168.1.213
+   - Bytes Enviados: 1,602,181,078
+   - Bytes Recebidos: 19,674,705,424
+
+⏱️ SISTEMA:
+   - Boot: 12/11/2025 18:41:35
+   - Uptime: 184.05 horas
+
+============================================================
+SENSORES AVANÇADOS
+============================================================
+
+🌡️ TEMPERATURA CPU:
+   - Valor: 27.9°C
+
+⚡ FREQUÊNCIA RAM:
+   - Valor: 2667 MHz
+
+🔋 ENERGIA RAM:
+   - Consumo Total: 2.94 W
+
+🔋 BATERIA:
+   - Status: N/A (Desktop ou sensor não disponível)
+
+============================================================
+TOP 10 PROCESSOS (por uso de CPU)
+============================================================
+
+1. System Idle Process (PID: 0)
+   CPU: 705.0% | RAM: 0.0%
+
+2. msedge.exe (PID: 7420)
+   CPU: 23.5% | RAM: 2.2%
+
+3. msedge.exe (PID: 6156)
+   CPU: 15.7% | RAM: 2.0%
+
+4. dwm.exe (PID: 9600)
+   CPU: 13.6% | RAM: 0.7%
+
+5. svchost.exe (PID: 3292)
+   CPU: 6.6% | RAM: 0.1%
+
+6. System (PID: 4)
+   CPU: 4.5% | RAM: 0.0%
+
+7. MsMpEng.exe (PID: 8352)
+   CPU: 4.1% | RAM: 1.6%
+
+8. msedge.exe (PID: 13092)
+   CPU: 4.1% | RAM: 2.0%
+
+9. MemCompression (PID: 3448)
+   CPU: 2.9% | RAM: 2.8%
+
+10. core.exe (PID: 4848)
+   CPU: 2.9% | RAM: 1.6%
+

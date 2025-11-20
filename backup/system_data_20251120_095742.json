@@ -1,0 +1,95 @@
+{
+    "timestamp": "2025-11-20T09:57:43.878571",
+    "data_backup": "20251120_095742",
+    "cpu": {
+        "uso_percent": 3.3,
+        "nucleos": 8,
+        "frequencia_mhz": 1803.0
+    },
+    "memoria": {
+        "total_gb": 7.84,
+        "usado_gb": 6.92,
+        "disponivel_gb": 0.91,
+        "percent_usado": 88.3
+    },
+    "disco": {
+        "total_gb": 237.29,
+        "usado_gb": 202.65,
+        "livre_gb": 34.63,
+        "percent_usado": 85.4
+    },
+    "rede": {
+        "ip_local": "192.168.1.213",
+        "bytes_enviados": 1592559401,
+        "bytes_recebidos": 19640812126,
+        "pacotes_enviados": 5203988,
+        "pacotes_recebidos": 364872
+    },
+    "sistema": {
+        "boot_time": "2025-11-12T18:41:35.120589",
+        "uptime_horas": 183.27,
+        "nome_so": "nt"
+    },
+    "processos_top10": [
+        {
+            "pid": 0,
+            "nome": "System Idle Process",
+            "cpu_percent": 763.2,
+            "memory_percent": 9.736520031429486e-05
+        },
+        {
+            "pid": 7420,
+            "nome": "msedge.exe",
+            "cpu_percent": 7.9,
+            "memory_percent": 4.505136501142581
+        },
+        {
+            "pid": 9600,
+            "nome": "dwm.exe",
+            "cpu_percent": 6.0,
+            "memory_percent": 1.0623030180291142
+        },
+        {
+            "pid": 20248,
+            "nome": "HWiNFO64.EXE",
+            "cpu_percent": 5.5,
+            "memory_percent": 0.38644248004743637
+        },
+        {
+            "pid": 4,
+            "nome": "System",
+            "cpu_percent": 3.2,
+            "memory_percent": 0.02716489088768827
+        },
+        {
+            "pid": 6156,
+            "nome": "msedge.exe",
+            "cpu_percent": 2.2,
+            "memory_percent": 1.9130314557752655
+        },
+        {
+            "pid": 4848,
+            "nome": "core.exe",
+            "cpu_percent": 1.8,
+            "memory_percent": 2.0510953098209357
+        },
+        {
+            "pid": 13168,
+            "nome": "WhatsApp.exe",
+            "cpu_percent": 1.6,
+            "memory_percent": 3.006929481306368
+        },
+        {
+            "pid": 12884,
+            "nome": "python.exe",
+            "cpu_percent": 1.2,
+            "memory_percent": 0.6057089111552284
+        },
+        {
+            "pid": 3448,
+            "nome": "MemCompression",
+            "cpu_percent": 0.8,
+            "memory_percent": 1.4626200391213375
+        }
+    ]
+}

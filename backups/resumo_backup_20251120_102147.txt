@@ -1,0 +1,84 @@
+============================================================
+BACKUP TASKMONITOR PRO 2 - 20251120_102147
+============================================================
+
+🕐 Data/Hora do Backup: 20/11/2025 10:21:47
+
+============================================================
+RESUMO DO SISTEMA
+============================================================
+
+💻 CPU:
+   - Uso Atual: 5.3%
+   - Núcleos: 4
+   - Frequência: 1803 MHz
+
+🧠 MEMÓRIA:
+   - Total: 7.84 GB
+   - Usado: 6.79 GB (86.7%)
+   - Disponível: 1.04 GB
+
+💾 DISCO:
+   - Total: 237.29 GB
+   - Usado: 202.66 GB (85.4%)
+   - Livre: 34.62 GB
+
+🌐 REDE:
+   - IP Local: 192.168.1.213
+   - Bytes Enviados: 1,596,931,988
+   - Bytes Recebidos: 19,656,139,211
+
+⏱️ SISTEMA:
+   - Boot: 12/11/2025 18:41:35
+   - Uptime: 183.67 horas
+
+============================================================
+SENSORES AVANÇADOS
+============================================================
+
+🌡️ TEMPERATURA CPU:
+   - Valor: 27.9°C
+
+⚡ FREQUÊNCIA RAM:
+   - Valor: 2667 MHz
+
+🔋 ENERGIA RAM:
+   - Consumo Total: 2.94 W
+
+🔋 BATERIA:
+   - Status: N/A (Desktop ou sensor não disponível)
+
+============================================================
+TOP 10 PROCESSOS (por uso de CPU)
+============================================================
+
+1. System Idle Process (PID: 0)
+   CPU: 0.0% | RAM: 0.0%
+
+2. System (PID: 4)
+   CPU: 0.0% | RAM: 0.0%
+
+3. Registry (PID: 172)
+   CPU: 0.0% | RAM: 0.8%
+
+4. conhost.exe (PID: 500)
+   CPU: 0.0% | RAM: 0.0%
+
+5. svchost.exe (PID: 644)
+   CPU: 0.0% | RAM: 0.0%
+
+6. csrss.exe (PID: 652)
+   CPU: 0.0% | RAM: 0.0%
+
+7. smss.exe (PID: 668)
+   CPU: 0.0% | RAM: 0.0%
+
+8. svchost.exe (PID: 708)
+   CPU: 0.0% | RAM: 0.0%
+
+9. CrossDeviceResume.exe (PID: 732)
+   CPU: 0.0% | RAM: 0.0%
+
+10. Code.exe (PID: 824)
+   CPU: 0.0% | RAM: 0.7%
+

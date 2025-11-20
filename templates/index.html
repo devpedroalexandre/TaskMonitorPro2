@@ -2,16 +2,25 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>TaskMonitor Pro</title>
+  <title>TaskMonitor Pro 2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       transition: background-color 0.3s, color 0.3s;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
     }
     body.dark-mode {
       background-color: #121212;
+      background: #121212;
       color: #f1f1f1;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 30px;
     }
     .dark-mode .container {
       background-color: #1e1e1e;
@@ -38,44 +47,225 @@
       position: absolute;
       top: 20px;
       right: 20px;
+      background-color: rgba(255, 255, 255, 0.9) !important;
+      color: #333 !important;
+      border: 2px solid #333 !important;
+      font-weight: bold;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .dark-mode .theme-toggle {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      color: #000 !important;
+      border: 2px solid #fff !important;
+    }
+    .theme-toggle:hover {
+      background-color: rgba(255, 255, 255, 1) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* ESTILO UNIFICADO DOS BOTÕES */
+    .btn-nav {
+      background-color: rgba(255, 255, 255, 0.7);
+      color: #333;
+      border: 2px solid #333;
+      padding: 8px 16px;
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+    
+    .btn-nav:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-color: #000;
+      color: #000;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-nav.active {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+      color: white !important;
+    }
+    
+    .dark-mode .btn-nav {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #f1f1f1;
+      border-color: #6c757d;
+      font-weight: 600;
+    }
+    
+    .dark-mode .btn-nav:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-color: #adb5bd;
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+    }
+    
+    .dark-mode .btn-nav.active {
+      background-color: #0d6efd;
+      border-color: #0d6efd;
+      color: white !important;
+    }
+    
+    /* NOVOS ESTILOS PARA GRÁFICOS DE PROCESSOS */
+    .processo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      margin-bottom: 8px;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    .dark-mode .processo-item {
+      background-color: #2a2a2a;
+      background: linear-gradient(135deg, #2a2a2a 0%, #333 100%);
+      border-color: #555;
+      border-width: 1px;
+    }
+    .processo-info {
+      flex: 1;
+      margin-right: 15px;
+      min-width: 200px;
+    }
+    .processo-grafico {
+      width: 350px;
+      height: 70px;
+      margin-right: 15px;
+    }
+    .processo-nome {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .processo-detalhes {
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: 4px;
+    }
+    .dark-mode .processo-detalhes {
+      color: #adb5bd;
+    }
+    
+    /* Badge de destaque */
+    .badge-cpu-high {
+      background-color: #dc3545 !important;
+      font-size: 11px;
+    }
+    .badge-mem-high {
+      background-color: #fd7e14 !important;
+      font-size: 11px;
+    }
+    
+    /* Status panel melhorado */
+    .status-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .status-card {
+      padding: 15px;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .status-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+    .dark-mode .status-card {
+      background-color: #2a2a2a;
+      background: #2a2a2a;
+      border-color: #444;
+      box-shadow: none;
+    }
+    .dark-mode .status-card:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    .status-label {
+      font-size: 12px;
+      color: #6c757d;
+      text-transform: uppercase;
+    }
+    .dark-mode .status-label {
+      color: #adb5bd;
+    }
+    .status-value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+    
+    /* Botões de filtro de processos */
+    .btn-filtro.active {
+      background-color: #0d6efd !important;
+      color: white !important;
+      border-color: #0d6efd !important;
     }
   </style>
 </head>
 <body>
   <div class="container py-5">
     <button class="btn btn-outline-secondary theme-toggle" onclick="alternarTema()">🌙 Tema</button>
-    <h1 class="text-center mb-4">🖥️ TaskMonitor Pro</h1>
+    <h1 class="text-center mb-4">🖥️ TaskMonitor Pro 2</h1>
 
-    <div class="row text-center">
-      <div class="col"><h4>CPU</h4><p class="fs-4">{{ cpu }}%</p></div>
-      <div class="col"><h4>Memória</h4><p class="fs-4">{{ memoria }}%</p></div>
-      <div class="col"><h4>Disco</h4><p class="fs-4">{{ disco }}%</p></div>
+    <!-- Cards de Status Principal -->
+    <div class="row text-center mb-4">
+      <div class="col-md-3"><h4>CPU</h4><p class="fs-4">{{ cpu }}%</p></div>
+      <div class="col-md-3"><h4>Memória</h4><p class="fs-4">{{ memoria }}%</p></div>
+      <div class="col-md-3"><h4>Disco</h4><p class="fs-4">{{ disco }}%</p></div>
+      <div class="col-md-3"><h4>Status</h4><p class="fs-4">{{ status_servidor }}</p></div>
     </div>
 
+    <!-- Botões de Navegação UNIFICADOS -->
     <div class="text-center mt-4">
-      <button class="btn btn-primary me-2" onclick="executarBackup()">Criar Backup</button>
-      <button class="btn btn-secondary me-2" onclick="mostrarPainel('status')">Status</button>
-      <button class="btn btn-outline-dark me-2" onclick="mostrarPainel('logs')">Logs</button>
-      <button class="btn btn-outline-danger me-2" onclick="mostrarPainel('processos')">Processos</button>
-      <button class="btn btn-outline-info me-2" onclick="mostrarPainel('rede')">Rede</button>
-      <button class="btn btn-outline-warning me-2" onclick="mostrarPainel('hardware')">Hardware</button>
-      <button class="btn btn-outline-success" onclick="mostrarPainel('uptime')">Uptime</button>
+      <button class="btn btn-nav me-2" id="btn-status" onclick="mostrarPainel('status')">Status</button>
+      <button class="btn btn-nav me-2" id="btn-rede" onclick="mostrarPainel('rede')">Rede</button>
+      <button class="btn btn-nav me-2" id="btn-hardware" onclick="mostrarPainel('hardware')">Hardware</button>
+      <button class="btn btn-nav me-2" id="btn-processos" onclick="mostrarPainel('processos')">Processos</button>
+      <button class="btn btn-nav me-2" id="btn-uptime" onclick="mostrarPainel('uptime')">Uptime</button>
+      <button class="btn btn-nav me-2" id="btn-backup" onclick="executarBackup()">Criar Backup</button>
+      <button class="btn btn-nav" id="btn-logs" onclick="mostrarPainel('logs')">Logs</button>
     </div>
 
+    <!-- Painel Backup -->
     <div id="painel-backup" class="mt-4 text-center" style="display:none;">
       <p id="mensagem-backup" class="fw-bold"></p>
     </div>
 
-    <div id="painel-status" class="mt-4" style="display:none;"><h4>Status do Sistema</h4><ul id="status-list" class="list-group"></ul></div>
-    <div id="painel-logs" class="mt-4" style="display:none;"><h4>Logs</h4><ul id="logs-list" class="list-group"></ul></div>
-    <div id="painel-processos" class="mt-4" style="display:none;"><h4>Processos</h4><ul id="processos-list" class="list-group"></ul></div>
-    
-    <!-- Painel de Rede -->
+    <!-- Painel Status (COM BATERIA) -->
+    <div id="painel-status" class="mt-4" style="display:none;">
+      <h4>📊 Status do Sistema</h4>
+      <div class="status-row" id="status-cards"></div>
+    </div>
+
+    <!-- Painel Logs -->
+    <div id="painel-logs" class="mt-4" style="display:none;">
+      <h4>📋 Logs</h4>
+      <ul id="logs-list" class="list-group"></ul>
+    </div>
+
+    <!-- Painel Processos (COM GRÁFICOS) -->
+    <div id="painel-processos" class="mt-4" style="display:none;">
+      <h4>⚙️ Processos</h4>
+      <div class="mb-3">
+        <button class="btn btn-sm btn-outline-secondary btn-filtro" id="btn-filtro-cpu" onclick="filtrarProcessos('cpu')">Top CPU</button>
+        <button class="btn btn-sm btn-outline-secondary btn-filtro" id="btn-filtro-memoria" onclick="filtrarProcessos('memoria')">Top Memória</button>
+        <button class="btn btn-sm btn-outline-secondary btn-filtro" id="btn-filtro-todos" onclick="filtrarProcessos('todos')">Todos</button>
+      </div>
+      <div id="processos-list"></div>
+    </div>
+
+    <!-- Painel Rede -->
     <div id="painel-rede" class="mt-4" style="display:none;">
-      <h4>Rede</h4>
+      <h4>🌐 Rede</h4>
       <ul id="rede-list" class="list-group"></ul>
-      
-      <!-- GRÁFICO DE REDE EM TEMPO REAL -->
       <div class="card mt-4">
         <div class="card-header bg-primary text-white">
           <h5>📊 Oscilação de Rede em Tempo Real</h5>
@@ -85,17 +275,35 @@
         </div>
       </div>
     </div>
-    
-    <div id="painel-hardware" class="mt-4" style="display:none;"><h4>Hardware</h4><ul id="hardware-list" class="list-group"></ul></div>
-    <div id="painel-uptime" class="mt-4" style="display:none;"><h4>Uptime</h4><ul id="uptime-list" class="list-group"></ul></div>
+
+    <!-- Painel Hardware -->
+    <div id="painel-hardware" class="mt-4" style="display:none;">
+      <h4>🖲️ Hardware</h4>
+      <ul id="hardware-list" class="list-group"></ul>
+    </div>
+
+    <!-- Painel Uptime -->
+    <div id="painel-uptime" class="mt-4" style="display:none;">
+      <h4>⏱️ Uptime</h4>
+      <ul id="uptime-list" class="list-group"></ul>
+    </div>
   </div>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
+    // ====================================
+    // FUNÇÕES BÁSICAS
+    // ====================================
+    
     function alternarTema() {
       document.body.classList.toggle('dark-mode');
+      localStorage.setItem('tema', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    function removerAtivo() {
+      document.querySelectorAll('.btn-nav').forEach(btn => btn.classList.remove('active'));
     }
 
     function esconderTodos() {
@@ -106,17 +314,126 @@
       }
     }
 
-    function mostrarPainel(tipo) {
+    // Restaurar tema ao carregar e mostrar Status automaticamente
+    window.addEventListener('load', function() {
+      if (localStorage.getItem('tema') === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+      
+      // Abre Status automaticamente ao carregar a página
+      mostrarPainel('status');
+    });
+
+    // ====================================
+    // BACKUP COM MARCAÇÃO ATIVA
+    // ====================================
+    
+    function executarBackup() {
+      removerAtivo();
       esconderTodos();
+      document.getElementById('btn-backup').classList.add('active');
+      
+      fetch('/backup')
+        .then(res => res.text())
+        .then(msg => {
+          document.getElementById('mensagem-backup').textContent = msg;
+          document.getElementById('painel-backup').style.display = 'block';
+        });
+    }
+
+    // ====================================
+    // STATUS COM BATERIA
+    // ====================================
+    
+    function mostrarPainel(tipo) {
+      removerAtivo();
+      esconderTodos();
+      
+      // Marca botão como ativo
+      document.getElementById(`btn-${tipo}`).classList.add('active');
 
       if (tipo === 'status') {
         fetch('/status').then(res => res.json()).then(data => {
-          document.getElementById('status-list').innerHTML = `
-            <li class="list-group-item">CPU: ${data.cpu}%</li>
-            <li class="list-group-item">Memória: ${data.memoria}%</li>
-            <li class="list-group-item">Disco: ${data.disco}%</li>
-            <li class="list-group-item">Servidor: ${data.status_servidor}</li>
+          let html = `
+            <div class="status-card">
+              <div class="status-label">CPU</div>
+              <div class="status-value">${data.cpu}%</div>
+            </div>
+            <div class="status-card">
+              <div class="status-label">Memória</div>
+              <div class="status-value">${data.memoria}%</div>
+            </div>
+            <div class="status-card">
+              <div class="status-label">Disco</div>
+              <div class="status-value">${data.disco}%</div>
+            </div>
+            <div class="status-card">
+              <div class="status-label">Servidor</div>
+              <div class="status-value">${data.status_servidor}</div>
+            </div>
           `;
+          
+          // TEMPERATURA CPU
+          html += `
+            <div class="status-card">
+              <div class="status-label">🌡️ Temperatura CPU</div>
+              <div class="status-value">${data.cpu_temperatura !== "N/A" ? data.cpu_temperatura + "°C" : "N/A"}</div>
+            </div>
+          `;
+          
+          // FREQUÊNCIA RAM
+          html += `
+            <div class="status-card">
+              <div class="status-label">⚡ Frequência RAM</div>
+              <div class="status-value">${data.ram_frequencia !== "N/A" ? data.ram_frequencia + " MHz" : "N/A"}</div>
+            </div>
+          `;
+          
+          // ENERGIA RAM
+          if (data.ram_energia && data.ram_energia.total_watts !== "N/A") {
+            html += `
+              <div class="status-card">
+                <div class="status-label">🔋 Energia RAM</div>
+                <div class="status-value">${data.ram_energia.total_watts}W</div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="status-card">
+                <div class="status-label">🔋 Energia RAM</div>
+                <div class="status-value">N/A</div>
+              </div>
+            `;
+          }
+          
+          // BATERIA (NOVO!)
+          if (data.bateria && data.bateria !== "N/A") {
+            const statusBateria = data.bateria.plugged ? "🔌 Conectado" : "🔋 Bateria";
+            let tempoRestante = "";
+            if (data.bateria.time_left && data.bateria.time_left > 0) {
+              const minutos = Math.floor(data.bateria.time_left / 60);
+              tempoRestante = `<br><small style="font-size: 14px;">${minutos} min restantes</small>`;
+            }
+            html += `
+              <div class="status-card">
+                <div class="status-label">🔋 Bateria</div>
+                <div class="status-value">
+                  ${data.bateria.percent}%<br>
+                  <small style="font-size: 14px;">${statusBateria}</small>
+                  ${tempoRestante}
+                </div>
+              </div>
+            `;
+          } else {
+            html += `
+              <div class="status-card">
+                <div class="status-label">🔋 Bateria</div>
+                <div class="status-value">N/A<br><small style="font-size: 12px;">Desktop</small></div>
+              </div>
+            `;
+          }
+          
+          document.getElementById('status-cards').innerHTML = html;
           document.getElementById('painel-status').style.display = 'block';
         });
       }
@@ -130,21 +447,11 @@
       }
 
       if (tipo === 'processos') {
-        fetch('/processos').then(res => res.json()).then(lista => {
-          document.getElementById('processos-list').innerHTML = lista.map(proc => `
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <span><strong>${proc.name}</strong> (PID: ${proc.pid}) — CPU: ${proc.cpu_percent}% | Memória: ${proc.memory_percent.toFixed(1)}%</span>
-              <button class="btn btn-sm btn-danger" onclick="encerrarProcesso(${proc.pid})">Encerrar</button>
-            </li>
-          `).join('');
-          document.getElementById('painel-processos').style.display = 'block';
-        });
+        carregarProcessos('cpu'); // Inicia com Top CPU ativo
       }
 
-      // REDE COM OLHOS INDEPENDENTES - CORRIGIDO
       if (tipo === 'rede') {
         fetch('/rede').then(res => res.json()).then(dados => {
-          // Estados independentes para cada IP
           let mostrarLocal = false;
           let mostrarPublico = false;
 
@@ -167,23 +474,18 @@
             `;
           };
 
-          // Função para alternar APENAS IP Local
           window.alternarIPLocal = () => {
             mostrarLocal = !mostrarLocal;
             atualizarRede();
           };
 
-          // Função para alternar APENAS IP Público
           window.alternarIPPublico = () => {
             mostrarPublico = !mostrarPublico;
             atualizarRede();
           };
 
-          // Renderiza pela primeira vez (com IPs ocultos)
           atualizarRede();
           document.getElementById('painel-rede').style.display = 'block';
-          
-          // Inicia o gráfico de rede
           iniciarGraficoRede();
         });
       }
@@ -215,14 +517,103 @@
       }
     }
 
-    function executarBackup() {
-      esconderTodos();
-      fetch('/backup')
-        .then(res => res.text())
-        .then(msg => {
-          document.getElementById('mensagem-backup').textContent = msg;
-          document.getElementById('painel-backup').style.display = 'block';
+    // ====================================
+    // PROCESSOS COM FILTROS
+    // ====================================
+    
+    function carregarProcessos(filtro = 'todos') {
+      // Remove active de todos os botões de filtro
+      document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('active'));
+      
+      // Adiciona active no botão clicado
+      const btnId = `btn-filtro-${filtro}`;
+      const btnAtivo = document.getElementById(btnId);
+      if (btnAtivo) {
+        btnAtivo.classList.add('active');
+      }
+      
+      const url = filtro === 'todos' ? '/processos' : `/processos?filtro=${filtro}`;
+      fetch(url).then(res => res.json()).then(lista => {
+        document.getElementById('processos-list').innerHTML = lista.map(proc => {
+          const cpuBadge = proc.cpu_percent > 10 ? '<span class="badge badge-cpu-high">Alto CPU</span>' : '';
+          const memBadge = proc.memory_percent > 10 ? '<span class="badge badge-mem-high">Alta Mem</span>' : '';
+          
+          return `
+            <div class="processo-item">
+              <div class="processo-info">
+                <div class="processo-nome">${proc.name}</div>
+                <div class="processo-detalhes">
+                  PID: ${proc.pid} | CPU: ${proc.cpu_percent}% | Memória: ${proc.memory_percent.toFixed(1)}%
+                  ${cpuBadge} ${memBadge}
+                </div>
+              </div>
+              <div class="processo-grafico">
+                <canvas id="chart-${proc.pid}"></canvas>
+              </div>
+              <button class="btn btn-sm btn-danger" onclick="encerrarProcesso(${proc.pid})">Encerrar</button>
+            </div>
+          `;
+        }).join('');
+        
+        lista.forEach(proc => {
+          renderizarGraficoProcesso(proc.pid, proc.cpu_percent, proc.memory_percent);
         });
+        
+        document.getElementById('painel-processos').style.display = 'block';
+      });
+    }
+
+    function filtrarProcessos(filtro) {
+      carregarProcessos(filtro);
+    }
+
+    // ====================================
+    // GRÁFICO INDIVIDUAL POR PROCESSO
+    // ====================================
+    
+    function renderizarGraficoProcesso(pid, cpu, mem) {
+      const canvas = document.getElementById(`chart-${pid}`);
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      
+      // Cores dinâmicas baseadas no uso
+      const cpuColor = cpu > 50 ? '#dc3545' : (cpu > 20 ? '#fd7e14' : '#0d6efd');
+      const memColor = mem > 50 ? '#dc3545' : (mem > 20 ? '#ffc107' : '#198754');
+      
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['CPU %', 'MEM %'],
+          datasets: [{
+            label: `Processo ${pid}`,
+            data: [cpu, mem],
+            backgroundColor: [cpuColor, memColor],
+            borderRadius: 4,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              ticks: { font: { weight: 'bold' } }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { weight: 'bold' } }
+            }
+          }
+        }
+      });
     }
 
     function encerrarProcesso(pid) {
@@ -238,7 +629,7 @@
         } else {
           alert(`⚠️ Erro ao encerrar processo: ${resp.mensagem}`);
         }
-        mostrarPainel('processos');
+        carregarProcessos('todos');
       });
     }
 
@@ -285,17 +676,7 @@
           maintainAspectRatio: true,
           scales: {
             y: {
-              beginAtZero: true,
-              title: {
-                display: true,
-                text: 'MB/s'
-              }
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Tempo'
-              }
+              beginAtZero: true
             }
           },
           plugins: {
@@ -312,7 +693,6 @@
 
       ultimoEnviado = 0;
       ultimoRecebido = 0;
-
       atualizarGraficoRede();
       window.intervaloGraficoRede = setInterval(atualizarGraficoRede, 2000);
     }
@@ -321,10 +701,7 @@
       fetch('/rede/historico')
         .then(response => response.json())
         .then(data => {
-          if (data.erro) {
-            console.error('Erro:', data.erro);
-            return;
-          }
+          if (data.erro) return;
 
           const agora = new Date().toLocaleTimeString('pt-BR');
           const downloadAtual = data.recebido;

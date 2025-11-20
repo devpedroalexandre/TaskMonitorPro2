@@ -1,0 +1,25 @@
+
+========================================
+  BACKUP DO SISTEMA - TaskMonitor Pro 2
+========================================
+Data/Hora: 20/11/2025 10:15:02
+
+========================================
+MÉTRICAS PRINCIPAIS
+========================================
+CPU: 9.5%
+Memória: 88.4%
+Disco: 85.4%
+Status do Servidor: Online
+
+========================================
+SENSORES AVANÇADOS
+========================================
+🌡️ Temperatura CPU: 27.9°C
+⚡ Frequência RAM: 2667 MHz
+🔋 Energia RAM: 2.94 W
+🔋 Bateria: N/A (Desktop ou sensor não disponível)
+
+========================================
+FIM DO BACKUP
+========================================
