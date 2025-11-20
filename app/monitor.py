@@ -1,191 +1,224 @@
 import psutil
 import platform
-import subprocess
+import socket
+import requests
+from datetime import datetime
+import wmi
 
 
-def get_cpu_temperature_wmi():
-    """
-    Lê temperatura do CPU via WMI no Windows.
-    Converte de décimos de Kelvin para Celsius.
-    """
+def get_system_info():
+    """Retorna informações básicas do sistema"""
     try:
-        if platform.system() != "Windows":
-            return None
+        w = wmi.WMI(namespace="root\\OpenHardwareMonitor")
+        temperatura = "N/A"
         
-        result = subprocess.run(
-            [
-                "powershell",
-                "-Command",
-                "(Get-WmiObject -Namespace 'root/WMI' -Class MSAcpi_ThermalZoneTemperature | Select-Object -First 1).CurrentTemperature"
-            ],
-            capture_output=True,
-            text=True,
-            timeout=10
-        )
-        
-        if result.returncode == 0:
-            temp_str = result.stdout.strip()
-            if temp_str and temp_str.isdigit():
-                temp_kelvin = int(temp_str) / 10
-                temp_celsius = temp_kelvin - 273.15
-                return round(temp_celsius, 1)
-        
-        return None
-    except Exception as e:
-        print(f"[DEBUG] Erro WMI temperatura: {e}")
-        return None
-
-
-def get_cpu_temperature():
-    """
-    Obtém temperatura do CPU.
-    """
+        for sensor in w.Sensor():
+            if sensor.SensorType == 'Temperature' and 'CPU' in sensor.Name:
+                temperatura = f"{sensor.Value:.1f}°C"
+                break
+    except:
+        temperatura = "N/A"
+    
+    # Frequência RAM
     try:
-        if platform.system() == "Windows":
-            temp = get_cpu_temperature_wmi()
-            if temp is not None:
-                return temp
-        
-        if hasattr(psutil, "sensors_temperatures"):
-            temps = psutil.sensors_temperatures()
-            for name in ['coretemp', 'cpu_thermal', 'k10temp', 'zenpower', 'it8792']:
-                if name in temps:
-                    entries = temps[name]
-                    if entries:
-                        return round(entries[0].current, 1)
-        
-        return None
-    except Exception as e:
-        print(f"[DEBUG] Erro ao obter temperatura: {e}")
-        return None
-
-
-def get_ram_frequency():
-    """
-    Obtém a frequência da memória RAM em MHz.
-    """
-    try:
-        system = platform.system()
-        
-        if system == "Windows":
-            try:
-                result = subprocess.run(
-                    ["wmic", "memorychip", "get", "speed"], 
-                    capture_output=True, 
-                    text=True,
-                    timeout=10
-                )
-                
-                if result.returncode == 0:
-                    lines = [line.strip() for line in result.stdout.strip().split('\n') if line.strip()]
-                    speeds = []
-                    for line in lines[1:]:
-                        if line and line.isdigit():
-                            speed = int(line)
-                            if speed > 100:
-                                speeds.append(speed)
-                    
-                    if speeds:
-                        return speeds[0]
-            except Exception as e:
-                print(f"[DEBUG] Erro WMIC: {e}")
-        
-        elif system == "Linux":
-            try:
-                result = subprocess.run(
-                    ["sudo", "dmidecode", "-t", "memory"], 
-                    capture_output=True, 
-                    text=True,
-                    timeout=10
-                )
-                for line in result.stdout.split('\n'):
-                    if 'Speed:' in line and 'MHz' in line:
-                        try:
-                            speed = int(line.split(':')[1].strip().split()[0])
-                            if speed > 100:
-                                return speed
-                        except:
-                            pass
-            except Exception as e:
-                print(f"[DEBUG] Erro dmidecode: {e}")
-        
-        return None
-    except Exception as e:
-        print(f"[DEBUG] Erro geral RAM frequency: {e}")
-        return None
-
-
-def get_ram_power_consumption():
-    """
-    Estima o consumo de energia da RAM.
-    """
+        w_cimv2 = wmi.WMI()
+        freq_ram = "N/A"
+        for memory in w_cimv2.Win32_PhysicalMemory():
+            if memory.ConfiguredClockSpeed:
+                freq_ram = f"{memory.ConfiguredClockSpeed} MHz"
+                break
+    except:
+        freq_ram = "N/A"
+    
+    # Energia RAM
     try:
         mem = psutil.virtual_memory()
-        total_gb = mem.total / (1024**3)
-        estimated_watts = (total_gb / 8) * 3
-        
-        return {
-            "total_watts": round(estimated_watts, 2)
-        }
-    except Exception as e:
-        print(f"[DEBUG] Erro ao calcular consumo: {e}")
-        return None
-
-
-def get_battery_info():
-    """
-    Obtém informações da bateria (apenas para notebooks).
-    Retorna percentual de carga e status.
-    """
+        energia_ram = f"{(mem.used / (1024**3) * 0.003):.2f}W"
+    except:
+        energia_ram = "N/A"
+    
+    # Bateria
     try:
-        if not hasattr(psutil, "sensors_battery"):
-            return None
-        
         battery = psutil.sensors_battery()
-        if battery is None:
-            return None
-        
-        return {
-            "percent": round(battery.percent, 1),
-            "plugged": battery.power_plugged,
-            "time_left": battery.secsleft if battery.secsleft != psutil.POWER_TIME_UNLIMITED else None
+        if battery:
+            bateria_info = {
+                'percent': f"{battery.percent}%",
+                'status': 'Carregando' if battery.power_plugged else 'Descarregando',
+                'type': 'Notebook'
+            }
+        else:
+            bateria_info = {
+                'percent': 'N/A',
+                'status': 'Desktop',
+                'type': 'Desktop'
+            }
+    except:
+        bateria_info = {
+            'percent': 'N/A',
+            'status': 'Desktop',
+            'type': 'Desktop'
         }
-    except Exception as e:
-        print(f"[DEBUG] Erro ao obter bateria: {e}")
-        return None
+    
+    cpu_percent = psutil.cpu_percent(interval=1)
+    memory = psutil.virtual_memory()
+    disk = psutil.disk_usage('/')
+    
+    return {
+        'cpu_percent': round(cpu_percent, 1),
+        'memory_percent': round(memory.percent, 1),
+        'disk_percent': round(disk.percent, 1),
+        'temperatura': temperatura,
+        'freq_ram': freq_ram,
+        'energia_ram': energia_ram,
+        'bateria': bateria_info,
+        'status': 'Online',
+        'os': platform.system(),
+        'os_version': platform.version(),
+        'architecture': platform.machine(),
+        'hostname': socket.gethostname(),
+        'boot_time': datetime.fromtimestamp(psutil.boot_time()).strftime("%d/%m/%Y %H:%M:%S")
+    }
 
 
-def get_status():
-    """
-    Retorna status completo do sistema.
-    """
+def get_processes():
+    """Retorna lista de processos com uso de CPU e memória - MELHORADO"""
+    processes = []
+    
+    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
+        try:
+            # Força leitura de informações do processo
+            pinfo = proc.info
+            
+            # Tenta acessar mais informações para garantir permissão
+            cpu_usage = proc.cpu_percent(interval=0.1)
+            
+            processes.append({
+                'pid': pinfo['pid'],
+                'name': pinfo['name'] or 'Unknown',
+                'cpu_percent': round(cpu_usage if cpu_usage else 0, 1),
+                'memory_percent': round(pinfo['memory_percent'] if pinfo['memory_percent'] else 0, 1)
+            })
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            # Ignora processos sem permissão de acesso
+            continue
+        except Exception:
+            # Ignora qualquer outro erro
+            continue
+    
+    return processes
+
+
+def get_top_processes_by_cpu(limit=10):
+    """Retorna os processos que mais consomem CPU"""
+    processes = get_processes()
+    return sorted(processes, key=lambda x: x['cpu_percent'], reverse=True)[:limit]
+
+
+def get_top_processes_by_memory(limit=10):
+    """Retorna os processos que mais consomem memória"""
+    processes = get_processes()
+    return sorted(processes, key=lambda x: x['memory_percent'], reverse=True)[:limit]
+
+
+def get_network_info():
+    """Retorna informações de rede"""
     try:
-        cpu_temp = get_cpu_temperature()
-        ram_freq = get_ram_frequency()
-        ram_power = get_ram_power_consumption()
-        battery = get_battery_info()
-        
-        status = {
-            "cpu": psutil.cpu_percent(interval=1),
-            "memoria": psutil.virtual_memory().percent,
-            "disco": psutil.disk_usage('/').percent,
-            "status_servidor": "Online",
-            "cpu_temperatura": cpu_temp if cpu_temp is not None else "N/A",
-            "ram_frequencia": ram_freq if ram_freq is not None else "N/A",
-            "ram_energia": ram_power if ram_power else {"total_watts": "N/A"},
-            "bateria": battery if battery else "N/A"
-        }
-        
-        return status
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+    except:
+        local_ip = "N/A"
+    
+    try:
+        public_ip = requests.get('https://api.ipify.org', timeout=3).text
+    except:
+        public_ip = "N/A"
+    
+    net_io = psutil.net_io_counters()
+    
+    return {
+        'local_ip': local_ip,
+        'public_ip': public_ip,
+        'bytes_sent': round(net_io.bytes_sent / (1024**2), 2),
+        'bytes_recv': round(net_io.bytes_recv / (1024**2), 2),
+        'packets_sent': net_io.packets_sent,
+        'packets_recv': net_io.packets_recv
+    }
+
+
+def kill_process(pid):
+    """Encerra um processo pelo PID"""
+    try:
+        process = psutil.Process(pid)
+        process.terminate()
+        return True, f"Processo {pid} encerrado com sucesso"
+    except psutil.NoSuchProcess:
+        return False, f"Processo {pid} não encontrado"
+    except psutil.AccessDenied:
+        return False, f"Sem permissão para encerrar o processo {pid}"
     except Exception as e:
-        print(f"[DEBUG] Erro ao obter status: {e}")
+        return False, f"Erro ao encerrar processo: {str(e)}"
+
+
+def get_hardware_info():
+    """Retorna informações de hardware"""
+    try:
+        w = wmi.WMI()
+        
+        # CPU
+        cpu_info = w.Win32_Processor()[0]
+        cpu_name = cpu_info.Name.strip()
+        cpu_cores = psutil.cpu_count(logical=False)
+        cpu_threads = psutil.cpu_count(logical=True)
+        
+        # RAM
+        ram_info = w.Win32_ComputerSystem()[0]
+        total_ram = round(int(ram_info.TotalPhysicalMemory) / (1024**3), 2)
+        
+        # Disco
+        disk = psutil.disk_usage('/')
+        total_disk = round(disk.total / (1024**3), 2)
+        
+        # GPU (se disponível)
+        try:
+            gpu_info = w.Win32_VideoController()[0]
+            gpu_name = gpu_info.Name
+        except:
+            gpu_name = "N/A"
+        
         return {
-            "cpu": "N/A",
-            "memoria": "N/A",
-            "disco": "N/A",
-            "status_servidor": "Erro",
-            "cpu_temperatura": "N/A",
-            "ram_frequencia": "N/A",
-            "ram_energia": {"total_watts": "N/A"},
-            "bateria": "N/A"
+            'cpu_name': cpu_name,
+            'cpu_cores': cpu_cores,
+            'cpu_threads': cpu_threads,
+            'ram_total': f"{total_ram} GB",
+            'disk_total': f"{total_disk} GB",
+            'gpu_name': gpu_name
         }
+    except:
+        return {
+            'cpu_name': 'N/A',
+            'cpu_cores': psutil.cpu_count(logical=False),
+            'cpu_threads': psutil.cpu_count(logical=True),
+            'ram_total': 'N/A',
+            'disk_total': 'N/A',
+            'gpu_name': 'N/A'
+        }
+
+
+def get_uptime():
+    """Retorna o tempo de atividade do sistema"""
+    boot_time = psutil.boot_time()
+    uptime_seconds = datetime.now().timestamp() - boot_time
+    
+    days = int(uptime_seconds // 86400)
+    hours = int((uptime_seconds % 86400) // 3600)
+    minutes = int((uptime_seconds % 3600) // 60)
+    
+    boot_datetime = datetime.fromtimestamp(boot_time)
+    
+    return {
+        'boot_time': boot_datetime.strftime("%d/%m/%Y %H:%M:%S"),
+        'uptime_days': days,
+        'uptime_hours': hours,
+        'uptime_minutes': minutes,
+        'uptime_formatted': f"{days}d {hours}h {minutes}min"
+    }
