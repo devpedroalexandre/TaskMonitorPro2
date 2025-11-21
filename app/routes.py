@@ -5,18 +5,20 @@ import psutil
 import os
 import glob
 
+
 main = Blueprint('main', __name__)
+
 
 
 @main.route('/')
 def index():
-    dados = get_status()
-    return render_template('index.html', **dados)
+    """Rota principal - Retorna o arquivo index.html"""
+    return render_template('index.html')
 
-
-@main.route('/status')
+@main.route('/status')  
 def status():
-    return jsonify(get_status())
+    return jsonify(get_status())  
+
 
 
 @main.route('/logs')
@@ -86,6 +88,7 @@ def logs():
         return f"❌ Erro ao carregar logs: {str(e)}"
 
 
+
 @main.route('/processos')
 def processos():
     filtro = request.args.get('filtro', 'todos')
@@ -112,6 +115,7 @@ def processos():
     return jsonify(lista)
 
 
+
 @main.route('/encerrar', methods=['POST'])
 def encerrar():
     try:
@@ -122,6 +126,7 @@ def encerrar():
         return jsonify({'status': 'encerrado', 'pid': pid})
     except Exception as e:
         return jsonify({'status': 'erro', 'mensagem': str(e)})
+
 
 
 @main.route('/rede')
@@ -150,6 +155,7 @@ def rede():
     })
 
 
+
 @main.route('/rede/historico')
 def rede_historico():
     try:
@@ -160,6 +166,7 @@ def rede_historico():
         })
     except Exception as e:
         return jsonify({'erro': str(e)})
+
 
 
 @main.route('/hardware')
@@ -178,6 +185,7 @@ def hardware():
     })
 
 
+
 @main.route('/uptime')
 def uptime():
     import datetime
@@ -189,6 +197,7 @@ def uptime():
         'minutos': int((uptime.total_seconds() % 3600) // 60),
         'inicio': boot_time.strftime('%d/%m/%Y %H:%M:%S')
     })
+
 
 
 @main.route('/backup')

@@ -306,21 +306,26 @@
 
     function atualizarDashboard() {
       fetch('/status')
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! Status: ${res.status}`);
+          }
+          return res.json();
+        })
         .then(data => {
+          console.log('Dados recebidos:', data);
           // Atualiza o dashboard com dados reais
-          document.getElementById('cpu-main').textContent = data.cpu ? data.cpu + '%' : '%';
-          document.getElementById('memoria-main').textContent = data.memoria ? data.memoria + '%' : '%';
-          document.getElementById('disco-main').textContent = data.disco ? data.disco + '%' : '%';
-          document.getElementById('status-main').textContent = data.status_servidor || '-';
+          document.getElementById('cpu-main').textContent = data.cpu ? data.cpu + '%' : '0%';
+          document.getElementById('memoria-main').textContent = data.memoria ? data.memoria + '%' : '0%';
+          document.getElementById('disco-main').textContent = data.disco ? data.disco + '%' : '0%';
+          document.getElementById('status-main').textContent = data.status_servidor || 'Offline';
         })
         .catch(err => {
-          console.error('Erro ao atualizar dashboard:', err);
-          // Em caso de erro, mantém o placeholder
-          document.getElementById('cpu-main').textContent = '%';
-          document.getElementById('memoria-main').textContent = '%';
-          document.getElementById('disco-main').textContent = '%';
-          document.getElementById('status-main').textContent = '-';
+          console.error('❌ Erro ao atualizar dashboard:', err);
+          document.getElementById('cpu-main').textContent = 'Erro';
+          document.getElementById('memoria-main').textContent = 'Erro';
+          document.getElementById('disco-main').textContent = 'Erro';
+          document.getElementById('status-main').textContent = 'Erro';
         });
     }
 
@@ -637,11 +642,14 @@
           `;
         }).join('');
         
-        lista.forEach(proc => {
-          renderizarGraficoProcesso(proc.pid, proc.cpu_percent, proc.memory_percent);
-        });
-        
         document.getElementById('painel-processos').style.display = 'block';
+        
+        // Pequeno delay para garantir que os canvas sejam renderizados corretamente
+        setTimeout(() => {
+          lista.forEach(proc => {
+            renderizarGraficoProcesso(proc.pid, proc.cpu_percent, proc.memory_percent);
+          });
+        }, 100);
       })
       .catch(err => {
         console.error('Erro ao carregar processos:', err);

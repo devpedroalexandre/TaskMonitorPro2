@@ -1,11 +1,11 @@
 from flask import Flask
-from .routes import main
-import os
 
 def create_app():
-    base_dir = os.path.abspath(os.path.dirname(__file__))
-    templates_path = os.path.join(base_dir, '..', 'templates')
-
-    app = Flask(__name__, template_folder=templates_path)
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'dev-secret-key-taskmonitor-pro-2'
+    
+    # Registra apenas o blueprint principal (que já tem todas as rotas)
+    from .routes import main
     app.register_blueprint(main)
+    
     return app
