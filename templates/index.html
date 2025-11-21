@@ -63,7 +63,6 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
-    /* ESTILO UNIFICADO DOS BOTÕES */
     .btn-nav {
       background-color: rgba(255, 255, 255, 0.7);
       color: #333;
@@ -108,7 +107,6 @@
       color: white !important;
     }
     
-    /* NOVOS ESTILOS PARA GRÁFICOS DE PROCESSOS */
     .processo-item {
       display: flex;
       justify-content: space-between;
@@ -149,7 +147,6 @@
       color: #adb5bd;
     }
     
-    /* Badge de destaque */
     .badge-cpu-high {
       background-color: #dc3545 !important;
       font-size: 11px;
@@ -159,7 +156,6 @@
       font-size: 11px;
     }
     
-    /* Status panel melhorado */
     .status-row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -202,7 +198,6 @@
       margin-top: 8px;
     }
     
-    /* Botões de filtro de processos */
     .btn-filtro.active {
       background-color: #0d6efd !important;
       color: white !important;
@@ -215,15 +210,13 @@
     <button class="btn btn-outline-secondary theme-toggle" onclick="alternarTema()">🌙 Tema</button>
     <h1 class="text-center mb-4">🖥️ TaskMonitor Pro 2</h1>
 
-    <!-- Cards de Status Principal -->
     <div class="row text-center mb-4">
-      <div class="col-md-3"><h4>CPU</h4><p class="fs-4">{{ cpu }}%</p></div>
-      <div class="col-md-3"><h4>Memória</h4><p class="fs-4">{{ memoria }}%</p></div>
-      <div class="col-md-3"><h4>Disco</h4><p class="fs-4">{{ disco }}%</p></div>
-      <div class="col-md-3"><h4>Status</h4><p class="fs-4">{{ status_servidor }}</p></div>
+      <div class="col-md-3"><h4>CPU</h4><p class="fs-4" id="cpu-main">%</p></div>
+      <div class="col-md-3"><h4>Memória</h4><p class="fs-4" id="memoria-main">%</p></div>
+      <div class="col-md-3"><h4>Disco</h4><p class="fs-4" id="disco-main">%</p></div>
+      <div class="col-md-3"><h4>Status</h4><p class="fs-4" id="status-main">-</p></div>
     </div>
 
-    <!-- Botões de Navegação UNIFICADOS -->
     <div class="text-center mt-4">
       <button class="btn btn-nav me-2" id="btn-status" onclick="mostrarPainel('status')">Status</button>
       <button class="btn btn-nav me-2" id="btn-rede" onclick="mostrarPainel('rede')">Rede</button>
@@ -234,24 +227,20 @@
       <button class="btn btn-nav" id="btn-logs" onclick="mostrarPainel('logs')">Logs</button>
     </div>
 
-    <!-- Painel Backup -->
     <div id="painel-backup" class="mt-4 text-center" style="display:none;">
       <p id="mensagem-backup" class="fw-bold"></p>
     </div>
 
-    <!-- Painel Status (COM BATERIA) -->
     <div id="painel-status" class="mt-4" style="display:none;">
       <h4>📊 Status do Sistema</h4>
       <div class="status-row" id="status-cards"></div>
     </div>
 
-    <!-- Painel Logs -->
     <div id="painel-logs" class="mt-4" style="display:none;">
-      <h4>📋 Logs</h4>
+      <h4>📋 Logs de Backup</h4>
       <ul id="logs-list" class="list-group"></ul>
     </div>
 
-    <!-- Painel Processos (COM GRÁFICOS) -->
     <div id="painel-processos" class="mt-4" style="display:none;">
       <h4>⚙️ Processos</h4>
       <div class="mb-3">
@@ -262,7 +251,6 @@
       <div id="processos-list"></div>
     </div>
 
-    <!-- Painel Rede -->
     <div id="painel-rede" class="mt-4" style="display:none;">
       <h4>🌐 Rede</h4>
       <ul id="rede-list" class="list-group"></ul>
@@ -276,27 +264,20 @@
       </div>
     </div>
 
-    <!-- Painel Hardware -->
     <div id="painel-hardware" class="mt-4" style="display:none;">
       <h4>🖲️ Hardware</h4>
       <ul id="hardware-list" class="list-group"></ul>
     </div>
 
-    <!-- Painel Uptime -->
     <div id="painel-uptime" class="mt-4" style="display:none;">
       <h4>⏱️ Uptime</h4>
       <ul id="uptime-list" class="list-group"></ul>
     </div>
   </div>
 
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
-    // ====================================
-    // FUNÇÕES BÁSICAS
-    // ====================================
-    
     function alternarTema() {
       document.body.classList.toggle('dark-mode');
       localStorage.setItem('tema', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
@@ -314,20 +295,35 @@
       }
     }
 
-    // Restaurar tema ao carregar e mostrar Status automaticamente
     window.addEventListener('load', function() {
       if (localStorage.getItem('tema') === 'dark') {
         document.body.classList.add('dark-mode');
       }
-      
-      // Abre Status automaticamente ao carregar a página
+      atualizarDashboard();
+      setInterval(atualizarDashboard, 3000);
       mostrarPainel('status');
     });
 
-    // ====================================
-    // BACKUP COM MARCAÇÃO ATIVA
-    // ====================================
-    
+    function atualizarDashboard() {
+      fetch('/status')
+        .then(res => res.json())
+        .then(data => {
+          // Atualiza o dashboard com dados reais
+          document.getElementById('cpu-main').textContent = data.cpu ? data.cpu + '%' : '%';
+          document.getElementById('memoria-main').textContent = data.memoria ? data.memoria + '%' : '%';
+          document.getElementById('disco-main').textContent = data.disco ? data.disco + '%' : '%';
+          document.getElementById('status-main').textContent = data.status_servidor || '-';
+        })
+        .catch(err => {
+          console.error('Erro ao atualizar dashboard:', err);
+          // Em caso de erro, mantém o placeholder
+          document.getElementById('cpu-main').textContent = '%';
+          document.getElementById('memoria-main').textContent = '%';
+          document.getElementById('disco-main').textContent = '%';
+          document.getElementById('status-main').textContent = '-';
+        });
+    }
+
     function executarBackup() {
       removerAtivo();
       esconderTodos();
@@ -341,15 +337,9 @@
         });
     }
 
-    // ====================================
-    // STATUS COM BATERIA
-    // ====================================
-    
     function mostrarPainel(tipo) {
       removerAtivo();
       esconderTodos();
-      
-      // Marca botão como ativo
       document.getElementById(`btn-${tipo}`).classList.add('active');
 
       if (tipo === 'status') {
@@ -373,7 +363,6 @@
             </div>
           `;
           
-          // TEMPERATURA CPU
           html += `
             <div class="status-card">
               <div class="status-label">🌡️ Temperatura CPU</div>
@@ -381,7 +370,6 @@
             </div>
           `;
           
-          // FREQUÊNCIA RAM
           html += `
             <div class="status-card">
               <div class="status-label">⚡ Frequência RAM</div>
@@ -389,7 +377,6 @@
             </div>
           `;
           
-          // ENERGIA RAM
           if (data.ram_energia && data.ram_energia.total_watts !== "N/A") {
             html += `
               <div class="status-card">
@@ -406,7 +393,6 @@
             `;
           }
           
-          // BATERIA (NOVO!)
           if (data.bateria && data.bateria !== "N/A") {
             const statusBateria = data.bateria.plugged ? "🔌 Conectado" : "🔋 Bateria";
             let tempoRestante = "";
@@ -447,7 +433,8 @@
       }
 
       if (tipo === 'processos') {
-        carregarProcessos('cpu'); // Inicia com Top CPU ativo
+        carregarProcessos('cpu');
+        document.getElementById('painel-processos').style.display = 'block';
       }
 
       if (tipo === 'rede') {
@@ -517,125 +504,6 @@
       }
     }
 
-    // ====================================
-    // PROCESSOS COM FILTROS
-    // ====================================
-    
-    function carregarProcessos(filtro = 'todos') {
-      // Remove active de todos os botões de filtro
-      document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('active'));
-      
-      // Adiciona active no botão clicado
-      const btnId = `btn-filtro-${filtro}`;
-      const btnAtivo = document.getElementById(btnId);
-      if (btnAtivo) {
-        btnAtivo.classList.add('active');
-      }
-      
-      const url = filtro === 'todos' ? '/processos' : `/processos?filtro=${filtro}`;
-      fetch(url).then(res => res.json()).then(lista => {
-        document.getElementById('processos-list').innerHTML = lista.map(proc => {
-          const cpuBadge = proc.cpu_percent > 10 ? '<span class="badge badge-cpu-high">Alto CPU</span>' : '';
-          const memBadge = proc.memory_percent > 10 ? '<span class="badge badge-mem-high">Alta Mem</span>' : '';
-          
-          return `
-            <div class="processo-item">
-              <div class="processo-info">
-                <div class="processo-nome">${proc.name}</div>
-                <div class="processo-detalhes">
-                  PID: ${proc.pid} | CPU: ${proc.cpu_percent}% | Memória: ${proc.memory_percent.toFixed(1)}%
-                  ${cpuBadge} ${memBadge}
-                </div>
-              </div>
-              <div class="processo-grafico">
-                <canvas id="chart-${proc.pid}"></canvas>
-              </div>
-              <button class="btn btn-sm btn-danger" onclick="encerrarProcesso(${proc.pid})">Encerrar</button>
-            </div>
-          `;
-        }).join('');
-        
-        lista.forEach(proc => {
-          renderizarGraficoProcesso(proc.pid, proc.cpu_percent, proc.memory_percent);
-        });
-        
-        document.getElementById('painel-processos').style.display = 'block';
-      });
-    }
-
-    function filtrarProcessos(filtro) {
-      carregarProcessos(filtro);
-    }
-
-    // ====================================
-    // GRÁFICO INDIVIDUAL POR PROCESSO
-    // ====================================
-    
-    function renderizarGraficoProcesso(pid, cpu, mem) {
-      const canvas = document.getElementById(`chart-${pid}`);
-      if (!canvas) return;
-      
-      const ctx = canvas.getContext('2d');
-      
-      // Cores dinâmicas baseadas no uso
-      const cpuColor = cpu > 50 ? '#dc3545' : (cpu > 20 ? '#fd7e14' : '#0d6efd');
-      const memColor = mem > 50 ? '#dc3545' : (mem > 20 ? '#ffc107' : '#198754');
-      
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['CPU %', 'MEM %'],
-          datasets: [{
-            label: `Processo ${pid}`,
-            data: [cpu, mem],
-            backgroundColor: [cpuColor, memColor],
-            borderRadius: 4,
-            borderWidth: 0
-          }]
-        },
-        options: {
-          indexAxis: 'y',
-          responsive: true,
-          maintainAspectRatio: true,
-          plugins: {
-            legend: { display: false }
-          },
-          scales: {
-            x: {
-              beginAtZero: true,
-              max: 100,
-              grid: { color: 'rgba(0,0,0,0.05)' },
-              ticks: { font: { weight: 'bold' } }
-            },
-            y: {
-              grid: { display: false },
-              ticks: { font: { weight: 'bold' } }
-            }
-          }
-        }
-      });
-    }
-
-    function encerrarProcesso(pid) {
-      fetch('/encerrar', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pid: pid })
-      })
-      .then(res => res.json())
-      .then(resp => {
-        if (resp.status === "encerrado") {
-          alert(`✅ Processo ${resp.pid} encerrado com sucesso!`);
-        } else {
-          alert(`⚠️ Erro ao encerrar processo: ${resp.mensagem}`);
-        }
-        carregarProcessos('todos');
-      });
-    }
-
-    // ====================================
-    // GRÁFICO DE REDE EM TEMPO REAL
-    // ====================================
     let redeChart = null;
     let ultimoEnviado = 0;
     let ultimoRecebido = 0;
@@ -732,6 +600,119 @@
           redeChart.update('none');
         })
         .catch(error => console.error('Erro:', error));
+    }
+
+    function carregarProcessos(filtro = 'cpu') {
+      document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`btn-filtro-${filtro}`).classList.add('active');
+      
+      let url = '/processos';
+      if (filtro === 'cpu') url = '/processos?filtro=cpu';
+      if (filtro === 'memoria') url = '/processos?filtro=memoria';
+      
+      fetch(url).then(res => res.json()).then(lista => {
+        if (!Array.isArray(lista) || lista.length === 0) {
+          document.getElementById('processos-list').innerHTML = '<div class="alert alert-warning">Nenhum processo encontrado.</div>';
+          document.getElementById('painel-processos').style.display = 'block';
+          return;
+        }
+        document.getElementById('processos-list').innerHTML = lista.map(proc => {
+          const cpuBadge = proc.cpu_percent > 10 ? '<span class="badge badge-cpu-high">Alto CPU</span>' : '';
+          const memBadge = proc.memory_percent > 10 ? '<span class="badge badge-mem-high">Alta Mem</span>' : '';
+          
+          return `
+            <div class="processo-item">
+              <div class="processo-info">
+                <div class="processo-nome">${proc.name}</div>
+                <div class="processo-detalhes">
+                  PID: ${proc.pid} | CPU: ${proc.cpu_percent}% | Memória: ${proc.memory_percent.toFixed(1)}%
+                  ${cpuBadge} ${memBadge}
+                </div>
+              </div>
+              <div class="processo-grafico">
+                <canvas id="chart-${proc.pid}"></canvas>
+              </div>
+              <button class="btn btn-sm btn-danger" onclick="encerrarProcesso(${proc.pid})">Encerrar</button>
+            </div>
+          `;
+        }).join('');
+        
+        lista.forEach(proc => {
+          renderizarGraficoProcesso(proc.pid, proc.cpu_percent, proc.memory_percent);
+        });
+        
+        document.getElementById('painel-processos').style.display = 'block';
+      })
+      .catch(err => {
+        console.error('Erro ao carregar processos:', err);
+        document.getElementById('processos-list').innerHTML = '<div class="alert alert-danger">Erro ao carregar processos.</div>';
+        document.getElementById('painel-processos').style.display = 'block';
+      });
+    }
+
+    function renderizarGraficoProcesso(pid, cpu, mem) {
+      const canvas = document.getElementById(`chart-${pid}`);
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      
+      const cpuColor = cpu > 50 ? '#dc3545' : (cpu > 20 ? '#fd7e14' : '#0d6efd');
+      const memColor = mem > 50 ? '#dc3545' : (mem > 20 ? '#ffc107' : '#198754');
+      
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['CPU %', 'MEM %'],
+          datasets: [{
+            label: `Processo ${pid}`,
+            data: [cpu, mem],
+            backgroundColor: [cpuColor, memColor],
+            borderRadius: 4,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: 'rgba(0,0,0,0.05)' },
+              ticks: { font: { weight: 'bold' } }
+            },
+            y: {
+              grid: { display: false },
+              ticks: { font: { weight: 'bold' } }
+            }
+          }
+        }
+      });
+    }
+
+    function filtrarProcessos(filtro) {
+      carregarProcessos(filtro);
+    }
+
+    function encerrarProcesso(pid) {
+      fetch('/encerrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pid: pid })
+      })
+      .then(res => res.json())
+      .then(resp => {
+        if (resp.status === "encerrado") {
+          alert(`✅ Processo ${resp.pid} encerrado com sucesso!`);
+        } else {
+          alert(`⚠️ Erro ao encerrar processo: ${resp.mensagem}`);
+        }
+        carregarProcessos('todos');
+      });
     }
   </script>
 </body>

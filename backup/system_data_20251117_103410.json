@@ -1,0 +1,95 @@
+{
+    "timestamp": "2025-11-17T10:34:11.935141",
+    "data_backup": "20251117_103410",
+    "cpu": {
+        "uso_percent": 0.4,
+        "nucleos": 8,
+        "frequencia_mhz": 1803.0
+    },
+    "memoria": {
+        "total_gb": 7.84,
+        "usado_gb": 6.63,
+        "disponivel_gb": 1.21,
+        "percent_usado": 84.6
+    },
+    "disco": {
+        "total_gb": 237.29,
+        "usado_gb": 196.18,
+        "livre_gb": 41.1,
+        "percent_usado": 82.7
+    },
+    "rede": {
+        "ip_local": "192.168.1.213",
+        "bytes_enviados": 425153248,
+        "bytes_recebidos": 14223399330,
+        "pacotes_enviados": 2750525,
+        "pacotes_recebidos": 274265
+    },
+    "sistema": {
+        "boot_time": "2025-11-12T18:41:35.931211",
+        "uptime_horas": 111.88,
+        "nome_so": "nt"
+    },
+    "processos_top10": [
+        {
+            "pid": 0,
+            "nome": "System Idle Process",
+            "cpu_percent": 766.8,
+            "memory_percent": 9.736520031429486e-05
+        },
+        {
+            "pid": 3564,
+            "nome": "msedge.exe",
+            "cpu_percent": 8.7,
+            "memory_percent": 3.2109095759648163
+        },
+        {
+            "pid": 4,
+            "nome": "System",
+            "cpu_percent": 4.9,
+            "memory_percent": 0.035781711115503365
+        },
+        {
+            "pid": 15472,
+            "nome": "python.exe",
+            "cpu_percent": 2.7,
+            "memory_percent": 0.4996782080129613
+        },
+        {
+            "pid": 20220,
+            "nome": "msedge.exe",
+            "cpu_percent": 2.4,
+            "memory_percent": 2.566984823686227
+        },
+        {
+            "pid": 4340,
+            "nome": "Code.exe",
+            "cpu_percent": 2.1,
+            "memory_percent": 0.8534059807547946
+        },
+        {
+            "pid": 16652,
+            "nome": "Code.exe",
+            "cpu_percent": 1.6,
+            "memory_percent": 2.821886918109051
+        },
+        {
+            "pid": 11500,
+            "nome": "dwm.exe",
+            "cpu_percent": 1.1,
+            "memory_percent": 0.4761158295369019
+        },
+        {
+            "pid": 17532,
+            "nome": "msedge.exe",
+            "cpu_percent": 1.1,
+            "memory_percent": 2.6370877679125195
+        },
+        {
+            "pid": 15520,
+            "nome": "msedge.exe",
+            "cpu_percent": 1.0,
+            "memory_percent": 1.3575629879822133
+        }
+    ]
+}
